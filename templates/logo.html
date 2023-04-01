@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load static %}
+        {% load bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        {% bootstrap_messages %}
+        <title>weather app</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    </head>
+
+    <body>
+        <br>
+        <div onclick="window.location.href = '/';">
+                <h1>weather app</h1>
+        </div>
+        <p>Jesteś zalogowany jako: {{request.user}}</p>
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}" class="btn btn-primary">Wyloguj się</a> 
+        {% endif %}
+        <hr>
+        <br><br>
+    </body>
+</html>
