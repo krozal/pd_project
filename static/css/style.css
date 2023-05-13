@@ -1,20 +1,102 @@
+/* Global styles */
 body {
-    color: #333333;
-    font-family: 'Open Sans', sans-serif;
-    text-align: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(132deg, #222831, #393E46, #00ADB5, #EEEEEE);
+  background-size: 400% 400%;
+  position: relative;
+  overflow: hidden;
+  color: #EEEEEE; /* Off-white */
+}
 
+.container {
+  max-width: 400px;
+}
 
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Open Sans', sans-serif; 
-    font-weight: 600; 
-  }
+.text-center {
+  text-align: center;
+}
 
-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0 auto;
-    width: 75%;
-  }
+/* Logo and user info */
+div {
+  text-align: center;
+  cursor: pointer;
+}
 
+h1 {
+  color: #EEEEEE; /* Off-white */
+  margin-bottom: 10px;
+}
+
+h2 {
+  color: #393E46; /* Off-white */
+  margin-bottom: 10px;
+}
+
+div:hover h1 {
+  color: #EEEEEE; /* Off-white */
+}
+
+hr {
+  border-top: 1px solid #EEEEEE; /* Off-white */
+}
+
+/* Login form */
+.login-form-container {
+  width: 500px;
+  background-color: #EEEEEE; /* Off-white */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-form-container form {
+  width: 100%;
+}
+
+.login-form-container label, .login-form-container input {
+  color: #222831; /* Dark cyan */
+  width: 100%;
+}
+
+.login-form-container input {
+  margin-bottom: 10px;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  color: #222831; /* Dark cyan */
+}
+
+.btn-login, .btn-register, .user-info .btn {
+  margin-top: 10px;
+  background-color: #00ADB5; /* Cyan */
+  color: #EEEEEE; /* Off-white */
+}
+
+.btn-login:hover, .btn-register:hover, .user-info .btn:hover {
+  background-color: #393E46; /* Darker light cyan */
+}
+
+/* Registration link */
+a.register-link, a.login-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  background-color: #00ADB5; /* Dark cyan */
+  color: #EEEEEE; /* Off-white */
+  padding: 10px 20px;
+  border-radius: 4px;
+}
+
+a.register-link:hover, a.login-link:hover {
+  background-color: #EEEEEE; /* Cyan */
+  color: #393E46; /* Off-white */
+}

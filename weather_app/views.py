@@ -11,9 +11,15 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 
 from django.contrib.auth.forms import UserCreationForm
-# Create your views here.
 
+import requests
+from django.conf import settings
+from django.shortcuts import render
+
+# Create your views here.
 def index(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
     return render(request, 'index.html')
 
 class CustomLoginView(LoginView):
@@ -39,6 +45,27 @@ class RegisterPage(FormView):
         login(self.request, user)
         return super().form_valid(form)
     
-@login_required(login_url='/login')
-def dashboard(request):
-    return render(request, 'dashboard.html')
+@login_required
+def weather_view(request):
+    api_key = settings.OPENWEATHERMAP_API_KEY
+    city = request.GET.get('city', 'Kielce')
+    url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=pl'
+
+    response = requests.get(url).json()
+
+    try:
+        weather = {
+            'city': response['name'],
+            'temperature': response['main']['temp'],
+            'description': response['weather'][0]['description'],
+            'humidity': response['main']['humidity'],
+            'wind_speed': response['wind']['speed']
+        }
+    except KeyError:
+        weather = None
+
+    context = {
+        'weather': weather
+    }
+
+    return render(request, 'dashboard.html', context)

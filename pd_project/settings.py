@@ -142,3 +142,5 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ],
 }
+
+OPENWEATHERMAP_API_KEY = '86d886bba21f847e4c63d4d7a4168ee7'
