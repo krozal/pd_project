@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rejestracja zakonczona</title>
+        {% load static %}
+        {% load bootstrap5 %}
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+        {% bootstrap_messages %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </head>
+<body>
+    {% include 'logo.html' %}
+    <h1>Rejestracja zakończona!</h1>
+    <p>Zeskanuj poniższy QR code za pomocą aplikacji autoryzacyjnej:</p>
+    <img src="data:image/png;base64,{{ qr_b64 }}" alt="QR code">
+    <div class="center-buttons">
+        <a href="{% url 'login' %}" class="btn btn-primary btn-login">Logowanie</a>
+    </div>
+</body>
+</html>

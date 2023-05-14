@@ -1,52 +1,91 @@
-from django.shortcuts import render
-from django.contrib.auth.views import LoginView
-from django.views.generic.edit import FormView
-
-from django.contrib.auth import login
-from django.contrib.auth import logout
-from django.shortcuts import redirect
-
-from django.urls import reverse_lazy
-
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-
-from django.contrib.auth.forms import UserCreationForm
-
-import requests
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm  
 from django.conf import settings
-from django.shortcuts import render
+from django.contrib import messages
+import requests
+from django_otp.plugins.otp_totp.models import TOTPDevice
+from django_otp.oath import totp
+import qrcode
+from io import BytesIO
+import base64
+from django_otp import user_has_device, verify_token
+import binascii
 
 # Create your views here.
+from django_otp.oath import totp
+import base64
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            device = TOTPDevice.objects.create(user=user, name='default')
+
+            # Tworzenie URL dla QR code
+            totp_bin = device.bin_key
+            totp_base32 = base64.b32encode(totp_bin).decode().strip("=")
+            url = f'otpauth://totp/{user.username}?secret={totp_base32}&issuer=YourApp'
+
+            # Tworzenie QR code
+            qr = qrcode.make(url)
+            qr_bytes = BytesIO()
+            qr.save(qr_bytes)
+            qr_b64 = base64.b64encode(qr_bytes.getvalue()).decode()
+
+            # Przesyłanie QR code do szablonu
+            return render(request, 'complete.html', {'qr_b64': qr_b64})
+
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'register.html', {'form': form})
+
+
+
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        totp_token = request.POST['totp']
+
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            # Check TOTP token
+            if user_has_device(user):
+                device = user.totpdevice_set.first()
+                if device.verify_token(totp_token):
+                    login(request, user)
+                    return redirect('dashboard')
+                else:
+                    messages.error(request, "Nieprawidłowy token TOTP")
+            else:
+                messages.error(request, "Użytkownik nie ma skonfigurowanego urządzenia TOTP")
+        else:
+            messages.error(request, "Nieprawidłowy użytkownik lub hasło")
+        return redirect('login')
+    else:
+        return render(request, 'login.html')
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('index')
+
 def index(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     return render(request, 'index.html')
 
-class CustomLoginView(LoginView):
-    template_name = 'login.html'
-    fields = '__all__'
-    redirect_authenticated_user = True
+def complete(request):
+    return render(request, 'complete.html')
 
-    def get_success_url(self):
-        return reverse_lazy('dashboard')
 
-def my_logout_view(request):
-    logout(request)
-    return redirect('login')
-
-class RegisterPage(FormView):
-    template_name = 'registration.html'
-    form_class = UserCreationForm
-    redirect_authenticated_user = True
-    success_url = reverse_lazy('login')
-    def form_valid(self, form):
-        form.save()
-        user = form.instance
-        login(self.request, user)
-        return super().form_valid(form)
-    
 @login_required
-def weather_view(request):
+def dashboard(request):
     api_key = settings.OPENWEATHERMAP_API_KEY
     city = request.GET.get('city', 'Kielce')
     url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=pl'

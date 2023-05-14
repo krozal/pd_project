@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Logowanie</title>
+    <title>Rejestracja</title>
     {% load static %}
     {% load bootstrap5 %}
     {% bootstrap_css %}
@@ -12,17 +12,14 @@
 </head>
 <body>
     {% include 'logo.html' %}
-    
     <div class="container login-form-container">
+        <h2>Rejestracja</h2>
         <form method="POST">
-            <h2>Logowanie</h2>
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Nazwa użytkownika">
-            <input type="password" name="password" placeholder="Hasło">
-            <input type="text" name="totp" placeholder="Kod TOTP">
-            <button type="submit" class="btn btn-primary btn-login">Zaloguj</button>
+            {% bootstrap_form form %}
+            <button type="submit" class="btn btn-primary btn-login">Zarejestruj</button>
         </form>
     </div>
-    <a href="{% url 'register' %}" class="register-link">Nie masz konta? Zarejestruj się</a>
+    <a href="{% url 'login' %}" class="register-link">Masz już konto? Zaloguj się</a>
 </body>
 </html>
