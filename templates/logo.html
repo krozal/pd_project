@@ -1,55 +1,17 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        {% load static %}
-        {% load bootstrap5 %}
-        {% bootstrap_css %}
-        {% bootstrap_javascript %}
-        {% bootstrap_messages %}
-        <title>weather app</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-    </head>
-
-    <body>
-        <div id="particles"></div>
-
-        <script>
-            var particles = document.getElementById('particles');
-            for (var i = 0; i < 50; i++) {
-                var particle = document.createElement('div');
-                particle.className = 'particle';
-                particles.appendChild(particle);
-                particle.style.left = Math.random()*100 + '%';
-                particle.style.animationDuration = Math.random()*3 + 2 + 's';
-                particle.style.animationDelay = Math.random()*5 + 's';
-            }
-            
-            document.onmousemove = function(e) {
-                var x = e.pageX - window.innerWidth/2;
-                var y = e.pageY - window.innerHeight/2;
-                particles.style.transform = 'translate(' + -x*0.05 + 'px,' + -y*0.05 + 'px)';
-            }
-            
-        </script>
-        <br>
-        <div onclick="window.location.href = '/';">
-                <h1>weather app</h1>
-        </div>
-        <div class="user-info">
-            
-            {% if user.is_authenticated %}
-                <p>Witaj, {{request.user}}!</p>
-                <a href="{% url 'logout' %}" class="btn btn-primary">Wyloguj się</a> 
-            {% endif %}
-            <div class="weather-icons">
-                <i class="fas fa-sun"></i>
-                <i class="fas fa-cloud"></i>
-                <i class="fas fa-umbrella"></i>
-                <i class="fas fa-snowflake"></i>
-            </div>
-        </div>
-
-        <hr>
-        <br><br>
-    </body>
-</html>
+<div class="weather-icons">
+    <i class="fas fa-sun"></i>
+    <i class="fas fa-cloud"></i>
+    <i class="fas fa-umbrella"></i>
+    <i class="fas fa-snowflake"></i>
+</div>
+<div onclick="window.location.href = '/';">
+    <h1>weather app</h1>
+</div>
+<div class="user-info">
+    {% if user.is_authenticated %}
+        <p>Witaj, {{request.user}}!</p>
+        <a href="{% url 'logout' %}" class="btn btn-primary">Wyloguj się</a> 
+    {% endif %}
+</div>
+<hr>
+<br><br>

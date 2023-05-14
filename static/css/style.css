@@ -74,7 +74,14 @@ hr {
 }
 
 .btn-login, .btn-register, .user-info .btn {
+  padding: 15px 30px; /* Dostosuj wartości, aby zmienić rozmiar */
+  font-size: 18px; /* Dostosuj wartość, aby zmienić rozmiar czcionki */
   margin-top: 10px;
+  background-color: #00ADB5; /* Cyan */
+  color: #EEEEEE; /* Off-white */
+}
+
+.btn-show, .btn-register, .user-info .btn {
   background-color: #00ADB5; /* Cyan */
   color: #EEEEEE; /* Off-white */
 }
