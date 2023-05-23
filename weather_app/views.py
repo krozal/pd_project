@@ -28,7 +28,7 @@ def register(request):
             # Tworzenie URL dla QR code
             totp_bin = device.bin_key
             totp_base32 = base64.b32encode(totp_bin).decode().strip("=")
-            url = f'otpauth://totp/{user.username}?secret={totp_base32}&issuer=YourApp'
+            url = f'otpauth://totp/{user.username}?secret={totp_base32}&issuer=WeatherApp'
 
             # Tworzenie QR code
             qr = qrcode.make(url)
@@ -54,7 +54,6 @@ def user_login(request):
 
         user = authenticate(request, username=username, password=password)
         if user is not None:
-            # Check TOTP token
             if user_has_device(user):
                 device = user.totpdevice_set.first()
                 if device.verify_token(totp_token):
