@@ -1,17 +1,35 @@
-<div class="weather-icons">
-    <i class="fas fa-sun"></i>
-    <i class="fas fa-cloud"></i>
-    <i class="fas fa-umbrella"></i>
-    <i class="fas fa-snowflake"></i>
-</div>
-<div onclick="window.location.href = '/';">
-    <h1>weather app</h1>
-</div>
-<div class="user-info">
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    {% load static %}
+    {% load django_bootstrap5 %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col weather-icons">
+            <i class="fas fa-sun"></i>
+            <i class="fas fa-cloud"></i>
+            <i class="fas fa-umbrella"></i>
+            <i class="fas fa-snowflake"></i>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <div class="weather-title" onclick="window.location.href = '/';">
+                <h1>Weather App</h1>
+            </div>
+        </div>
+    </div>
     {% if user.is_authenticated %}
-        <p>Witaj, {{request.user}}!</p>
-        <a href="{% url 'logout' %}" class="btn btn-primary">Wyloguj się</a> 
+        <p>Witaj, {{ request.user }}!</p>
+        <a href="{% url 'logout' %}" class="btn btn-primary">Wyloguj się</a>
     {% endif %}
 </div>
 <hr>
 <br><br>
+</body>
+</html>

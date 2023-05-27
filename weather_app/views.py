@@ -1,22 +1,18 @@
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm  
+# Create your views here.
+import base64
+from io import BytesIO
+
+import qrcode
+import requests
 from django.conf import settings
 from django.contrib import messages
-import requests
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
+from django_otp import user_has_device
 from django_otp.plugins.otp_totp.models import TOTPDevice
-from django_otp.oath import totp
-import qrcode
-from io import BytesIO
-import base64
-from django_otp import user_has_device, verify_token
-import binascii
 
-# Create your views here.
-from django_otp.oath import totp
-import base64
 
 def register(request):
     if request.method == 'POST':
@@ -43,7 +39,6 @@ def register(request):
         form = UserCreationForm()
 
     return render(request, 'register.html', {'form': form})
-
 
 
 def user_login(request):
@@ -74,10 +69,12 @@ def user_logout(request):
     logout(request)
     return redirect('index')
 
+
 def index(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     return render(request, 'index.html')
+
 
 def complete(request):
     return render(request, 'complete.html')

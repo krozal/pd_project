@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl">
 <head>
     <title>Rejestracja</title>
     {% load static %}
-    {% load bootstrap5 %}
+    {% load django_bootstrap5 %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
     {% bootstrap_messages %}
@@ -11,15 +11,18 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
+
+<div class="container">
     {% include 'logo.html' %}
-    <div class="container login-form-container">
-        <h2>Rejestracja</h2>
-        <form method="POST">
+    <h2>Rejestracja</h2>
+    <div class="login-form-container">
+        <form method="POST" class="mb-3">
             {% csrf_token %}
             {% bootstrap_form form %}
-            <button type="submit" class="btn btn-primary btn-login">Zarejestruj</button>
+            <button type="submit" class="btn btn-primary btn-login mb-3">Zarejestruj</button>
+            <a href="{% url 'login' %}" class="register-link mb-3">Masz już konto? Zaloguj się</a>
         </form>
     </div>
-    <a href="{% url 'login' %}" class="register-link">Masz już konto? Zaloguj się</a>
+</div>
 </body>
 </html>
