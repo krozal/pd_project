@@ -13,6 +13,10 @@ from django.shortcuts import render, redirect
 from django_otp import user_has_device
 from django_otp.plugins.otp_totp.models import TOTPDevice
 
+from .models import Weather
+
+
+
 
 def register(request):
     if request.method == 'POST':
@@ -96,11 +100,36 @@ def dashboard(request):
             'humidity': response['main']['humidity'],
             'wind_speed': response['wind']['speed']
         }
+        # Zapisz dane pogodowe w bazie danych
+        Weather.objects.create(
+            city=weather['city'],
+            temperature=weather['temperature'],
+            description=weather['description'],
+            humidity=weather['humidity'],
+            wind_speed=weather['wind_speed']
+        )
+
     except KeyError:
         weather = None
 
+     # Pobierz dane pogodowe
+    weather_data = Weather.objects.filter(city=city).order_by('-timestamp')
+
+    # Przekształć dane do formatu zrozumiałego dla wykresu
+    chart_data = {
+        'labels': [data.timestamp.strftime('%Y-%m-%d %H:%M') for data in weather_data],
+        'datasets': [{
+            'label': 'Temperature',
+            'data': [data.temperature for data in weather_data],
+            'fill': False,
+            'borderColor': 'rgb(75, 192, 192)',
+            'tension': 0.1
+        }]
+    }
+
     context = {
-        'weather': weather
+        'weather': weather,
+        'chart_data': chart_data
     }
 
     return render(request, 'dashboard.html', context)
