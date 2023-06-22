@@ -113,7 +113,7 @@ def dashboard(request):
         weather = None
 
      # Pobierz dane pogodowe
-    weather_data = Weather.objects.filter(city=city).order_by('-timestamp')
+    weather_data = Weather.objects.filter(city=city).order_by('timestamp')
 
     # Przekształć dane do formatu zrozumiałego dla wykresu
     chart_data = {
