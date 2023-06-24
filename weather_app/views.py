@@ -14,6 +14,7 @@ from django_otp import user_has_device
 from django_otp.plugins.otp_totp.models import TOTPDevice
 
 from .models import Weather
+from datetime import timedelta
 
 
 
@@ -25,18 +26,18 @@ def register(request):
             user = form.save()
             device = TOTPDevice.objects.create(user=user, name='default')
 
-            # Tworzenie URL dla QR code
+            # tworzenie URL dla QR code
             totp_bin = device.bin_key
             totp_base32 = base64.b32encode(totp_bin).decode().strip("=")
             url = f'otpauth://totp/{user.username}?secret={totp_base32}&issuer=WeatherApp'
 
-            # Tworzenie QR code
+            # tworzenie QR code
             qr = qrcode.make(url)
             qr_bytes = BytesIO()
             qr.save(qr_bytes)
             qr_b64 = base64.b64encode(qr_bytes.getvalue()).decode()
 
-            # Przesyłanie QR code do szablonu
+            
             return render(request, 'complete.html', {'qr_b64': qr_b64})
 
     else:
@@ -88,9 +89,16 @@ def complete(request):
 def dashboard(request):
     api_key = settings.OPENWEATHERMAP_API_KEY
     city = request.GET.get('city', 'Kielce')
-    url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=pl'
-
-    response = requests.get(url).json()
+    
+    url = 'http://api.openweathermap.org/data/2.5/weather'
+    params = {
+        'q': city,
+        'appid': api_key,
+        'units': 'metric',
+        'lang': 'pl'
+    }
+    
+    response = requests.get(url, params=params).json()
 
     try:
         weather = {
@@ -100,7 +108,7 @@ def dashboard(request):
             'humidity': response['main']['humidity'],
             'wind_speed': response['wind']['speed']
         }
-        # Zapisz dane pogodowe w bazie danych
+        # zapisywanie danych do bazy danych
         Weather.objects.create(
             city=weather['city'],
             temperature=weather['temperature'],
@@ -112,12 +120,12 @@ def dashboard(request):
     except KeyError:
         weather = None
 
-     # Pobierz dane pogodowe
-    weather_data = Weather.objects.filter(city=city).order_by('-timestamp')
+     # pobieranie danych pogodowych
+    weather_data = Weather.objects.filter(city=city).order_by('timestamp')
 
-    # Przekształć dane do formatu zrozumiałego dla wykresu
+    # zamiana formatu danych do formatu dla wykresu
     chart_data = {
-        'labels': [data.timestamp.strftime('%Y-%m-%d %H:%M') for data in weather_data],
+        'labels': [(data.timestamp + timedelta(hours=2)).strftime('%Y-%m-%d %H:%M') for data in weather_data],
         'datasets': [{
             'label': 'Temperature',
             'data': [data.temperature for data in weather_data],
