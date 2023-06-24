@@ -120,8 +120,8 @@ def dashboard(request):
     except KeyError:
         weather = None
 
-     # pobieranie danych pogodowych
-    weather_data = Weather.objects.filter(city=city).order_by('timestamp')
+     # Pobierz dane pogodowe
+    weather_data = Weather.objects.filter(city=city).order_by('-timestamp')
 
     # zamiana formatu danych do formatu dla wykresu
     chart_data = {
