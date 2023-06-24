@@ -1,6 +1,7 @@
 # Create your views here.
 import base64
 from io import BytesIO
+from django.views.decorators.http import require_http_methods, require_POST, require_GET
 
 import qrcode
 import requests
@@ -18,7 +19,7 @@ from datetime import timedelta
 
 
 
-
+@require_POST
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -45,7 +46,7 @@ def register(request):
 
     return render(request, 'register.html', {'form': form})
 
-
+@require_POST
 def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -69,28 +70,28 @@ def user_login(request):
     else:
         return render(request, 'login.html')
 
-
+@require_GET
 def user_logout(request):
     logout(request)
     return redirect('index')
 
-
+@require_GET
 def index(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     return render(request, 'index.html')
 
-
+@require_GET
 def complete(request):
     return render(request, 'complete.html')
 
-
+@require_GET
 @login_required
 def dashboard(request):
     api_key = settings.OPENWEATHERMAP_API_KEY
     city = request.GET.get('city', 'Kielce')
     
-    url = 'http://api.openweathermap.org/data/2.5/weather'
+    url = 'https://api.openweathermap.org/data/2.5/weather'
     params = {
         'q': city,
         'appid': api_key,
@@ -121,7 +122,7 @@ def dashboard(request):
         weather = None
 
      # pobieranie danych pogodowych
-    weather_data = Weather.objects.filter(city=city).order_by('-timestamp')
+    weather_data = Weather.objects.filter(city=city).order_by('timestamp')
 
     # zamiana formatu danych do formatu dla wykresu
     chart_data = {
