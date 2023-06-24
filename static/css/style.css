@@ -78,7 +78,6 @@ a.register-link, a.login-link {
     padding: 10px 20px;
     border-radius: 4px;
     width: 100%;
-    text-align: center;
 }
 
 a.register-link:hover, a.login-link:hover {
