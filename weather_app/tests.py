@@ -10,7 +10,7 @@ class WeatherAppTests(TestCase):
         self.client = Client()
         self.user = get_user_model().objects.create_user(
             username='testuser',
-            password='testpass123'
+            password='Testpass123!'
         )
         self.weather = Weather.objects.create(
             city="Kielce",
@@ -21,7 +21,7 @@ class WeatherAppTests(TestCase):
         )
 
     def test_dashboard_view(self):
-        self.client.login(username='testuser', password='testpass123')
+        self.client.login(username='testuser', password='Testpass123!')
         response = self.client.get(reverse('dashboard'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'dashboard.html')
