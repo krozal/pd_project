@@ -19,7 +19,7 @@ from .models import Weather
 from datetime import timedelta
 
 
-
+@require_http_methods(["GET", "POST"])
 def register(request):
     """
     Rejestracja nowego użytkownika i generowanie dla niego kodu QR do uwierzytelniania dwuetapowego.
